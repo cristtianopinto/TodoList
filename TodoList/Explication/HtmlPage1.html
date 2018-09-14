@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <p>
+        <h1>Création du projet IIS - API</h1>
+        <ul>
+            <li>
+                1 - Création du projet IIS - Application WEB ASP.NET(.NET Framework)
+            </li>
+            <li>
+                2 - Créer les Models - Categorie et Tache
+            </li>
+            <li>
+                3 - Créer la BD - Affichage > explorateur d'objects SQL Server
+            </li>
+            <li>
+                4 - On installe Nuget EF > Gerer le packages Nuget
+            </li>
+            <li>
+                5 - On add la connexion string au fichier Web.config
+            </li>
+            <li>
+                6 - On créer la classe du Content(TodoDbContext) qui herite de DBContext
+                (On créer le constructor vide qui prenet d'appeler sont constructor parent - base)
+            </li>
+        </ul>
+    </p>
+    <p>
+        <h1>Code First pour la création du Bd</h1>
+        <h4>NE JAMAIS SUPPRIMER UNE MIGRATION DEJA CREE EN BD!</h4>
+        <ul>
+            <li>
+                1 - Créer un dossier migrations
+            </li>
+            <li>
+                2 - Ajouter una classe Configuration dans ce dossier aui hérite de DbMigrationsConfiguration
+            </li>
+            <li>
+                3 - On lui donne  < TodoDbContext >
+            </li>
+            <li>
+                4 - Ensuite un methode 
+                <b>public Configuration() {
+                AutomaticMigrationsEnabled = false;
+                }</b>
+            </li>
+            <li>
+                5 - Ensuite ouvrir la console de gestion package nuget
+                Affichage > autre fenétre > console du gestionnaire du package
+            </li>
+            <li>
+                6 - Executer la commande suivante:
+                    add-migration Init (CamelCase)
+                    
+            </li>
+        </ul>
+    </p>
+</body>
+</html>
