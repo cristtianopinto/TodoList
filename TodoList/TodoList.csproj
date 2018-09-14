@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Explication\HtmlPage1.html" />
+    <Content Include="Explication\StyleSheet1.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -103,6 +104,10 @@
     <Compile Include="Migrations\201809140855522_Init.cs" />
     <Compile Include="Migrations\201809140855522_Init.Designer.cs">
       <DependentUpon>201809140855522_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809141444479_AjoutTache.cs" />
+    <Compile Include="Migrations\201809141444479_AjoutTache.Designer.cs">
+      <DependentUpon>201809141444479_AjoutTache.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Categorie.cs" />
@@ -124,6 +129,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201809140855522_Init.resx">
       <DependentUpon>201809140855522_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809141444479_AjoutTache.resx">
+      <DependentUpon>201809141444479_AjoutTache.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
