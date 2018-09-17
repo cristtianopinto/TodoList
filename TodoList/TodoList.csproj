@@ -87,9 +87,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Explication\HtmlPage1.html" />
-    <Content Include="Explication\StyleSheet1.css" />
+    <Content Include="Html\HtmlPage1.html" />
+    <Content Include="index.html" />
+    <Content Include="Html\StyleSheet1.css" />
     <Content Include="Global.asax" />
+    <Content Include="Html\Tache.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -102,13 +104,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201809140855522_Init.cs" />
-    <Compile Include="Migrations\201809140855522_Init.Designer.cs">
-      <DependentUpon>201809140855522_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201809141444479_AjoutTache.cs" />
-    <Compile Include="Migrations\201809141444479_AjoutTache.Designer.cs">
-      <DependentUpon>201809141444479_AjoutTache.cs</DependentUpon>
+    <Compile Include="Migrations\201809170817419_Init.cs" />
+    <Compile Include="Migrations\201809170817419_Init.Designer.cs">
+      <DependentUpon>201809170817419_Init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Categorie.cs" />
@@ -128,11 +126,8 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201809140855522_Init.resx">
-      <DependentUpon>201809140855522_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201809141444479_AjoutTache.resx">
-      <DependentUpon>201809141444479_AjoutTache.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201809170817419_Init.resx">
+      <DependentUpon>201809170817419_Init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

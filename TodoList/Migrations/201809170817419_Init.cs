@@ -3,10 +3,19 @@ namespace TodoList.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AjoutTache : DbMigration
+    public partial class Init : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        ID = c.Int(nullable: false, identity: true),
+                        Nom = c.String(nullable: false, maxLength: 20),
+                    })
+                .PrimaryKey(t => t.ID);
+            
             CreateTable(
                 "dbo.Taches",
                 c => new
@@ -30,6 +39,7 @@ namespace TodoList.Migrations
             DropForeignKey("dbo.Taches", "CategorieID", "dbo.Categories");
             DropIndex("dbo.Taches", new[] { "CategorieID" });
             DropTable("dbo.Taches");
+            DropTable("dbo.Categories");
         }
     }
 }
