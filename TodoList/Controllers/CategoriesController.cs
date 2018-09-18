@@ -13,11 +13,20 @@ namespace TodoList.Controllers
     {
         private TodoDbContext db = new TodoDbContext();
 
+        /// <summary>
+        /// Meu metodo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IQueryable<Categorie> GetCategories()
         {
             return db.Categories.OrderBy(x => x.Nom);
         }
-
+        /// <summary>
+        /// Meu metodo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public IHttpActionResult GetCategorie(int id)
         {
             var categorie = db.Categories.Find(id);
