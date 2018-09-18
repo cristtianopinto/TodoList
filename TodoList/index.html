@@ -6,12 +6,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
         .Tache {
             border: 1px solid lightgray;
             padding: 10px;
+            
         }
         .Tache input[type=checkbox] {
             margin-right: 8px;
@@ -31,7 +33,7 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/index.html">Todo - App</a>
+                <a class="navbar-brand" href="/index.html"><i class="far fa-check-circle"></i> Todo - App</a>
             </div>
             <ul class="nav navbar-nav">                
                 <li><a href="/Html/Tache.html">Tache</a></li>
@@ -42,13 +44,14 @@
     <!-- FIN:nav bar-->
     <div class="container">
         <!--<h1>Todo </h1>-->
-        <p id="numTache"></p>
+        
        
         <div class="row" id="listeTaches">
             <h1>Liste des Taches</h1>
+            <p id="numTache"></p>
         </div>
         <div class="row">
-            <div style="margin-bottom: 25px;" class="col-sm-6">
+            <div style="margin-top: 100px;" class="col-sm-6">
                 <a href="/Html/Tache.html" class="btn btn-primary btn-sm">Nouvelle Tache</a>
             </div>
         </div>
@@ -63,12 +66,13 @@
                     url: 'http://localhost:52786/api/taches',
                     success: function (taches) {
                         var divListeTaches = $('#listeTaches'); // SANS Jquery - document.GetElementById('IdElement');
-
+                        divListeTaches.addClass('row');
                         var i = 1;
                         for (tache of taches) {
                             var id = 'id' + i;
 
                             var divTache = $('<div class="Tache alert"></div>');// SANS Jquery - var li1 = document.createElement("li"); li1.textContent = "seu texto";
+                            
                             divTache.attr("data-id", tache.ID);//??? saber o aue esse metodo faz
                             divTache.empty;
                             if (tache.Statut) {
@@ -84,7 +88,7 @@
                                 ModifierStatutTache(idTache, this);
                             });
 
-                            var buttonDelete = $('<button class="btn btn-danger btn-sm">Delete</button>');
+                            var buttonDelete = $('<button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>');
                             buttonDelete.on('click', function () {
                                 var div = $(this).closest(".Tache");//??? saber o aue esse metodo faz
                                 var idTache = div.attr("data-id");//??? saber o aue esse metodo faz
@@ -93,7 +97,14 @@
 
                             divTache.append(buttonDelete);
                             divTache.append(inputEtat);
-                            divTache.append($('<label for =' + id + '></label>').text(tache.Nom + ' - Desc. ' + (tache.Description ? tache.Description : "Indéfini") + ' - Date: ' + (tache.DateFin ? tache.DateFin : "Indéfini")));
+                            /*
+                            divTache.append($('<label for =' + id + '></label>').text(tache.Nom + ' - Desc' + (tache.Description ? tache.Description : "Indéfini") + ' - Date: ' + (tache.DateFin ? tache.DateFin : "Indéfini")));
+                            */
+                            divTache.append($('<label class="h3" for =' + id + '></label>').text(tache.Nom));
+                            divTache.append($('<br/>'));
+                            divTache.append($('<label for =' + id + '></label>').text((tache.Description ? tache.Description : "Indéfini")));
+                            divTache.append($('<br/>'));
+                            divTache.append($('<label for =' + id + '></label>').text('Date: ' + (tache.DateFin ? tache.DateFin : "Indéfini")));
                             divListeTaches.append(divTache); //  SANS Jquery -ullistTaches.appendChild(li);
                             i++;
                         }

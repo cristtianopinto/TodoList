@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
@@ -20,6 +21,7 @@
         .Categorie:hover button {
             float: right;
             display: block;
+            margin-right:10px;
         }
     </style>
 </head>
@@ -27,11 +29,11 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/index.html">Todo - App</a>
+                <a class="navbar-brand" href="/index.html"><i class="far fa-check-circle"></i> Todo - App</a>
             </div>
             <ul class="nav navbar-nav">
                 <li><a href="/Html/Tache.html">Tache</a></li>
-                <li class="active"><a href="/Html/Categorie.html">Categorie</a></liclass="active">
+                <li class="active"><a href="/Html/Categorie.html">Categorie</a></li>
             </ul>
         </div>
     </nav>
@@ -42,13 +44,13 @@
             <div style="margin-bottom:50px;" id="listeCategories">
 
             </div>
-            <h1>Nouvelle Catégorie</h1>
+            
             <form style="height:200px;">
                 <div class="form-group">
                     <label for="Nom">Nom</label>
-                    <input type="text" class="form-control" id="Nom" />
+                    <input type="text" class="form-control" id="Nom" placeholder="Nouvelle catégorie"/>
                 </div>
-                <button class="btn btn-primary" style="margin-top:50px;" onclick="return Enregistrer()">Enregistrer</button> <!--on besoin d'un return-->
+                <button class="btn btn-primary" style="margin-top:50px;" onclick="return Enregistrer()">Ajouter</button> <!--on besoin d'un return-->
 
             </form>
         </div>        
@@ -67,7 +69,8 @@
                 url: '/api/categories',
                 data: categorie,
                 success: function () {
-                    window.location.href = '/index.html';
+                    getCategories();
+                    $('#Nom').val('');//zerar o nome da cadegoria que entrou
                 },
                 error: function () {
                     alert('Aïe aïe aïe carambla !!');
@@ -75,34 +78,37 @@
             });
             return false;
         }
+        
+        function RemplirDivCategorie(divCategorie, categorie) {
+            divCategorie.empty();
+            divCategorie.data('id', categorie.ID);
+            divCategorie.append($('<span></span>').text(categorie.Nom));
+            var boutonSupprimer = $('<button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>');
+            boutonSupprimer.on('click', function () {
+                var idCategorie = $(this).closest('.Categorie').data('id');
+                SuprimmerCategorie(idCategorie);
+            });
+            divCategorie.append(boutonSupprimer);
+            var boutonModifier = $('<button class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></button>');
+            boutonModifier.on('click', function () {
+                ModifierCategorie($(this));
+            });
+            divCategorie.append(boutonModifier);
+        }
 
-
-        function getCategories() {
-            $.ajax({
-                url: 'http://localhost:52786/api/categories',
+        function getCategories() {            
+                $.ajax({
+                url: '/api/categories',
                 success: function (categories) {
                     var divListeCategories = $('#listeCategories');
-
-                    for (categorie of categories) {
-
-                        var divCategorie = $('<div class="Categorie alert"></div>');
-                        divCategorie.attr("data-id", categorie.ID);
-                        
-                        var buttonDelete = $('<button class="btn btn-danger btn-sm">Delete</button>');
-                        buttonDelete.on('click', function () {
-                            var div = $(this).closest(".Categorie");
-                            var idCategorie = div.attr("data-id");
-                            SuprimmerCategorie(idCategorie, div);
-                        });
-
-                        divCategorie.append(buttonDelete);
-                        
-                        divCategorie.append($('<label></label>').text(categorie.Nom));
+                    divListeCategories.empty();
+                    for (var categorie of categories) {
+                        var divCategorie = $('<div class="Categorie" style="height:50px;"></div>');
+                        RemplirDivCategorie(divCategorie, categorie);
                         divListeCategories.append(divCategorie);
-                    }                    
-                },
-                error: Erreur
-            });
+                    }
+                }
+            });            
         }
         function Erreur() {
             alert("Impossible de supprimer. Peut-être la catégorie est liée à une tache?");
@@ -112,12 +118,82 @@
                 type: 'DELETE',
                 url: '/api/Categories/' + id,
                 success: function () {
-                    $(div).remove();
-                    location.reload();
+                    getCategories();
                 },
                 error: Erreur
             });
         }
+        function ModifierCategorie(boutton) {            
+            var div = boutton.closest('.Categorie');
+            var span = div.find('span');
+            var nom = span.text();
+            div.data('nom',nom);
+
+            div.empty();
+
+            var input = $('<input type="text"/>').val(span.text());
+            div.append(input);
+            input.focus();//cursor parar la
+            input.select();//palavra selecionada
+            
+            input.on('keyup', function (event) {
+                var divCategorie = $(this).closest('.Categorie');
+                switch (event.which) {
+                    case 13://touche ENTER
+                        EnregistrerModification(divCategorie);
+                        break;
+                    case 27://touche ESCAPE
+                        AnnulerModification(divCategorie);
+                        break;
+                }
+            });
+            
+            var buttonEnregistrer = $('<button class="btn btn-primary btn-sm"><i class="far fa-save"></i></button>');
+            buttonEnregistrer.on('click', function () {
+                let divCategorie = $(this).closest('.Categorie');
+                EnregistrerModification(divCategorie) ;      
+            });      
+            var buttonAnnuler = $('<button class="btn btn-secondary btn-sm"><i class="fas fa-ban"></i></button>');
+            buttonAnnuler.on('click', function () {
+                let divCategorie = $(this).closest('.Categorie');
+                AnnulerModification(divCategorie);
+            });
+
+            div.append(buttonAnnuler);  
+            div.append(buttonEnregistrer);   
+            /*
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/Categories/' + id,
+                success: function () {
+                    $(div).remove();
+                    location.reload();
+                },
+                error: Erreur
+            });*/
+        }
+        function AnnulerModification(divCategorie) {
+            let idCategorie = divCategorie.data('id');
+            let nomCategorie = divCategorie.data('nom'); // nom que j'avais stocké plus haut
+            RemplirDivCategorie(divCategorie, { ID: idCategorie, Nom: nomCategorie });
+        }
+        function EnregistrerModification(divCategorie) {
+            let idCategorie = divCategorie.data('id');
+            let nomCategorie = divCategorie.find('input').val();
+            $.ajax({
+                type: 'PUT',
+                url: '/api/categories/' + idCategorie,
+                data: {
+                    ID: idCategorie,
+                    nom: nomCategorie
+                },
+                success: function () {
+                    RemplirDivCategorie(divCategorie, { ID: idCategorie, Nom: nomCategorie });
+                }
+            });
+        }
+
+
         getCategories();
     </script>
 </body>
