@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Catégories</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .Categorie {
+            border: 1px solid lightgray;
+            padding: 10px;
+        }
+        .Categorie button {
+            float: right;
+            display: none;
+        }
+        .Categorie:hover button {
+            float: right;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/index.html">Todo - App</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/Html/Tache.html">Tache</a></li>
+                <li class="active"><a href="/Html/Categorie.html">Categorie</a></liclass="active">
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <h1>Liste des Catégories</h1>
+            <div style="margin-bottom:50px;" id="listeCategories">
+
+            </div>
+            <h1>Nouvelle Catégorie</h1>
+            <form style="height:200px;">
+                <div class="form-group">
+                    <label for="Nom">Nom</label>
+                    <input type="text" class="form-control" id="Nom" />
+                </div>
+                <button class="btn btn-primary" style="margin-top:50px;" onclick="return Enregistrer()">Enregistrer</button> <!--on besoin d'un return-->
+
+            </form>
+        </div>        
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script>
+
+        function Enregistrer() {
+            var categorie = {
+                Nom: $('#Nom').val()
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/categories',
+                data: categorie,
+                success: function () {
+                    window.location.href = '/index.html';
+                },
+                error: function () {
+                    alert('Aïe aïe aïe carambla !!');
+                }
+            });
+            return false;
+        }
+
+
+        function getCategories() {
+            $.ajax({
+                url: 'http://localhost:52786/api/categories',
+                success: function (categories) {
+                    var divListeCategories = $('#listeCategories');
+
+                    for (categorie of categories) {
+
+                        var divCategorie = $('<div class="Categorie alert"></div>');
+                        divCategorie.attr("data-id", categorie.ID);
+                        
+                        var buttonDelete = $('<button class="btn btn-danger btn-sm">Delete</button>');
+                        buttonDelete.on('click', function () {
+                            var div = $(this).closest(".Categorie");
+                            var idCategorie = div.attr("data-id");
+                            SuprimmerCategorie(idCategorie, div);
+                        });
+
+                        divCategorie.append(buttonDelete);
+                        
+                        divCategorie.append($('<label></label>').text(categorie.Nom));
+                        divListeCategories.append(divCategorie);
+                    }                    
+                },
+                error: Erreur
+            });
+        }
+        function Erreur() {
+            alert("Impossible de supprimer. Peut-être la catégorie est liée à une tache?");
+        }
+        function SuprimmerCategorie(id, div) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/Categories/' + id,
+                success: function () {
+                    $(div).remove();
+                    location.reload();
+                },
+                error: Erreur
+            });
+        }
+        getCategories();
+    </script>
+</body>
+</html>

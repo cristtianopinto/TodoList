@@ -1,133 +1,142 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-          crossorigin="anonymous" />
+    <title>Todo - app</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
         .Tache {
             border: 1px solid lightgray;
             padding: 10px;
         }
-        .Tache input[type=checkbox]{
+        .Tache input[type=checkbox] {
             margin-right: 8px;
         }
-        .Tache button{
+        .Tache button {
             float: right;
+            display: none;
         }
-        
+        .Tache:hover button {
+            float: right;
+            display: block;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Todo </h1><p id="numTache"></p>
-        <div style="margin-botton:25px;">
-            <a href="/Html/Tache.html" class="btn btn-primary btn-sm">Nouvelle Tache</a>
+    <!-- nav bar-->
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/index.html">Todo - App</a>
+            </div>
+            <ul class="nav navbar-nav">                
+                <li><a href="/Html/Tache.html">Tache</a></li>
+                <li><a href="/Html/Categorie.html">Categorie</a></li>                
+            </ul>
         </div>
-        <div class ="container" id="listeTaches">
-
+    </nav>
+    <!-- FIN:nav bar-->
+    <div class="container">
+        <!--<h1>Todo </h1>-->
+        <p id="numTache"></p>
+       
+        <div class="row" id="listeTaches">
+            <h1>Liste des Taches</h1>
+        </div>
+        <div class="row">
+            <div style="margin-bottom: 25px;" class="col-sm-6">
+                <a href="/Html/Tache.html" class="btn btn-primary btn-sm">Nouvelle Tache</a>
+            </div>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>
-    <script>
-        function getTaches() {
-            $.ajax({
-                url: 'http://localhost:52786/api/taches',
-                success: function (taches) {
-                    var divListeTaches = $('#listeTaches'); // SANS Jquery - document.GetElementById('IdElement');
-                    
-                    var i = 1;
-                    for (tache of taches) {
-                        var id = 'id' + i;
-                        
-                        var divTache = $('<div class="Tache alert"></div>');// SANS Jquery - var li1 = document.createElement("li"); li1.textContent = "seu texto";
-                        divTache.attr("data-id", tache.ID);//??? saber o aue esse metodo faz
-                        divTache.empty;
-                        if (tache.Statut) {
-                            divTache.addClass('alert-success');//adiciona uma classe bootstrap
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+                integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+                crossorigin="anonymous"></script>
+        <script>
+            function getTaches() {
+                $.ajax({
+                    url: 'http://localhost:52786/api/taches',
+                    success: function (taches) {
+                        var divListeTaches = $('#listeTaches'); // SANS Jquery - document.GetElementById('IdElement');
+
+                        var i = 1;
+                        for (tache of taches) {
+                            var id = 'id' + i;
+
+                            var divTache = $('<div class="Tache alert"></div>');// SANS Jquery - var li1 = document.createElement("li"); li1.textContent = "seu texto";
+                            divTache.attr("data-id", tache.ID);//??? saber o aue esse metodo faz
+                            divTache.empty;
+                            if (tache.Statut) {
+                                divTache.addClass('alert-success');//adiciona uma classe bootstrap
+                            }
+
+                            var inputEtat = $('<input type="checkbox" id=' + id + '>');
+                            inputEtat.attr('checked', tache.Statut);//??? saber o aue esse metodo faz
+                            //appeler le serveur quand on clique dessus
+                            inputEtat.on('click', function () {
+                                var div = $(this).closest(".Tache");//??? saber o aue esse metodo faz
+                                var idTache = div.attr("data-id");//??? saber o aue esse metodo faz
+                                ModifierStatutTache(idTache, this);
+                            });
+
+                            var buttonDelete = $('<button class="btn btn-danger btn-sm">Delete</button>');
+                            buttonDelete.on('click', function () {
+                                var div = $(this).closest(".Tache");//??? saber o aue esse metodo faz
+                                var idTache = div.attr("data-id");//??? saber o aue esse metodo faz
+                                SuprimmerTache(idTache, div);
+                            });
+
+                            divTache.append(buttonDelete);
+                            divTache.append(inputEtat);
+                            divTache.append($('<label for =' + id + '></label>').text(tache.Nom + ' - Desc. ' + (tache.Description ? tache.Description : "Indéfini") + ' - Date: ' + (tache.DateFin ? tache.DateFin : "Indéfini")));
+                            divListeTaches.append(divTache); //  SANS Jquery -ullistTaches.appendChild(li);
+                            i++;
                         }
 
-                        var inputEtat = $('<input type="checkbox" id='+id+'>');
-                        inputEtat.attr('checked', tache.Statut);//??? saber o aue esse metodo faz  
-                        //appeler le serveur quand on clique dessus
-                        inputEtat.on('click', function () {
-                            var div = $(this).closest(".Tache");//??? saber o aue esse metodo faz
-                            var idTache = div.attr("data-id");//??? saber o aue esse metodo faz
-                            ModifierStatutTache(idTache, this);
-                        });
+                        document.getElementById("numTache").innerHTML = i - 1 + " tache(s)";
+                    },
+                    error: Erreur
+                });
+            }
+            function Erreur() {
+                alert("Erreur de Page!");
+            }
 
-                        var buttonDelete = $('<button class="btn btn-danger btn-sm">Delete</button>');
-                        buttonDelete.on('click', function () {
-                            var div = $(this).closest(".Tache");//??? saber o aue esse metodo faz
-                            var idTache = div.attr("data-id");//??? saber o aue esse metodo faz
-                            SuprimmerTache(idTache, div);
-                        });
+            function ModifierStatutTache(id, input) {
+                $.ajax({
+                    type: 'PUT',
+                    url: 'http://localhost:52786/api/TacheStatut/' + id + '?statut=' + input.checked,
+                    success: function () {
+                        var divTache = $(input).closest(".Tache");
+                        if (input.checked) {
+                            divTache.addClass('alert-success');
+                        } else {
+                            divTache.removeClass('alert-success');
+                        }
+                    },
+                    error: Erreur
+                });
+            }
 
-                        divTache.append(buttonDelete);
-                        divTache.append(inputEtat);
-                        divTache.append($('<label for ='+id+'></label>').text(tache.Nom+' - desc. '+tache.Description));
-                        divListeTaches.append(divTache); //  SANS Jquery -ullistTaches.appendChild(li);
-                        i++; 
-                    } 
-                    
-                    document.getElementById("numTache").innerHTML = i-1+" tache(s)";
-                },
-                error: Erreur
-            });
-        }
-        function Erreur() {
-            alert("Erreur de Page!");
-        }
+            function SuprimmerTache(id, div) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: 'http://localhost:52786/api/Taches/' + id,
+                    success: function () {
+                        $(div).remove();
+                        location.reload();
+                    },
+                    error: Erreur
+                });
+            }            
 
-        function ModifierStatutTache(id, input) {
-            $.ajax({
-                type: 'PUT',
-                url: 'http://localhost:52786/api/TacheStatut/' + id + '?statut=' + input.checked,
-                success: function () {
-                    var divTache = $(input).closest(".Tache");
-                    if (input.checked) {
-                        divTache.addClass('alert-success');
-                    } else {
-                        divTache.removeClass('alert-success');
-                    }
-                },
-                error: Erreur
-            });
-        }
-
-        function SuprimmerTache(id, div) {
-            $.ajax({
-                type: 'DELETE',
-                url: 'http://localhost:52786/api/Taches/' + id,
-                success: function () {                    
-                    $(div).remove();
-                    location.reload();
-                },
-                error: Erreur
-            });
-            
-        }
-        /*
-        function AddTaches(id, div) {
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost:52786/api/Taches/' + id,
-                success: function () {
-                    getTaches();
-                },
-                error: Erreur
-            });
-
-        }*/
-
-        //$ - para utilisar um metodo jquery
-        getTaches();
-    </script>
-</body>
-</html>
+            //$ - para utilisar um metodo jquery
+            getTaches();
+        </script>
+    </body>
+    </html>
