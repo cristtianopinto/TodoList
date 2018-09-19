@@ -20,7 +20,7 @@ namespace TodoList.Controllers
         // GET: api/Taches
         public IQueryable<Tache> GetTaches()
         {
-            return db.Taches;
+            return db.Taches.Include(x=>x.Categorie);
         }
 
         // GET: api/Taches/5
@@ -28,6 +28,7 @@ namespace TodoList.Controllers
         public IHttpActionResult GetTache(int id)
         {
             Tache tache = db.Taches.Find(id);
+            
             if (tache == null)
             {
                 return NotFound();

@@ -16,17 +16,18 @@
                 2 - Créer les Models - Categorie et Tache
             </li>
             <li>
-                3 - Créer la BD - Affichage > explorateur d'objects SQL Server
+                3 - Créer la BD - (Nom BD) - Affichage > explorateur d'objects SQL Server
             </li>
             <li>
-                4 - On installe Nuget EF > Gerer le packages Nuget
+                4 - On installe Nuget Entity framework > Gerer le packages Nuget - Entity framework
             </li>
             <li>
                 5 - On add la connexion string au fichier Web.config
             </li>
             <li>
-                6 - On créer la classe du Content(TodoDbContext) qui herite de DBContext
-                (On créer le constructor vide qui prenet d'appeler sont constructor parent - base)
+                6 - On créer la classe du Context(TodoDbContext) qui herite de DBContext
+                (On créer le constructor vide qui prenet d'appeler sont constructor parent - base
+                On passe le name de la ConnextionString du web.config)
             </li>
         </ul>
     </p>
@@ -38,7 +39,7 @@
                 1 - Créer un dossier migrations
             </li>
             <li>
-                2 - Ajouter una classe Configuration dans ce dossier aui hérite de DbMigrationsConfiguration
+                2 - Ajouter una classe Configuration dans ce dossier qui hérite de DbMigrationsConfiguration
             </li>
             <li>
                 3 - On lui donne  < TodoDbContext >
@@ -60,5 +61,13 @@
             </li>
         </ul>
     </p>
+    <input type="button" id="myButton" value="CLICK - CONSOLE" />
+    <script>
+        
+        
+        document.getElementById("myButton").onclick = function () {
+            console.log("button clicked");            
+        }
+    </script>
 </body>
 </html>

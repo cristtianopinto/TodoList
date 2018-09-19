@@ -13,7 +13,7 @@ namespace TodoList.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201809170817419_Init"; }
+            get { return "201809190738292_Init"; }
         }
         
         string IMigrationMetadata.Source
